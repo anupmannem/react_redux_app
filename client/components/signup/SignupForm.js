@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import map from 'lodash/map';
 import cn from 'classnames';
 import propTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 
 import timezones from '../../data/timezones';
 import validateInput from '../../../server/shared/validations/signup';
@@ -47,7 +46,7 @@ export default class SignupForm extends Component {
       this.props.userSignupRequest(this.state)
         .then(
           () => {
-            browserHistory.push('/')
+            this.context.router.push('/');
           },
           ({ data }) => this.setState({ errors: data, isLoading: false }),
         );
@@ -122,3 +121,7 @@ export default class SignupForm extends Component {
 SignupForm.propTypes = {
   userSignupRequest: propTypes.func.isRequired,
 };
+
+SignupForm.contextType = {
+  router: propTypes.object.isRequired,
+}
