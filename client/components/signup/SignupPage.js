@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
-import SignupForm from './SignupForm';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
+import SignupForm from './SignupForm';
 import { userSignupRequest } from '../../actions/signupActions';
 
 class SignupPage extends Component {

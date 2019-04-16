@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import map from 'lodash/map';
 import cn from 'classnames';
+import propTypes from 'prop-types';
 import timezones from '../../data/timezones';
+
+import validateInput from '../../../server/shared/validations/signup';
+import TextFieldGroup from '../common/TextFieldGroup';
 
 export default class SignupForm extends Component {
   constructor(props) {
@@ -24,14 +28,27 @@ export default class SignupForm extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  isValid() {
+    const { errors, isValid } = validateInput(this.state);
+
+    if (!isValid) {
+      this.setState({ errors });
+    }
+
+    return isValid;
+  }
+
   onSubmit(e) {
-    this.setState({ errors: {}, isLoading: true });
     e.preventDefault();
-    this.props.userSignupRequest(this.state)
-      .then(
-        () => { },
-        ({ data }) => this.setState({ errors: data, isLoading: false }),
-      );
+
+    if (this.isValid()) {
+      this.setState({ errors: {}, isLoading: true });
+      this.props.userSignupRequest(this.state)
+        .then(
+          () => { },
+          ({ data }) => this.setState({ errors: data, isLoading: false }),
+        );
+    }
   }
 
   render() {
@@ -43,49 +60,37 @@ export default class SignupForm extends Component {
       <form onSubmit={this.onSubmit}>
         <h1>Join our community</h1>
 
-        <div className={cn("form-group", { 'has-error': errors.username })}>
-          <label className="control-label">Username</label>
-          <input
-            type="text"
-            name={this.state.username}
-            className="form-control"
-            onChange={this.onChange}
-          />
-          {errors.username && <span className="help-block">{errors.username}</span>}
-        </div>
+        <TextFieldGroup
+          error={errors.username}
+          label="Username"
+          onChange={this.onChange}
+          value={this.state.username}
+          field="username"
+        />
 
-        <div className={cn("form-group", { 'has-error': errors.email })}>
-          <label className="control-label">Email</label>
-          <input
-            type="email"
-            name={this.state.email}
-            className="form-control"
-            onChange={this.onChange}
-          />
-          {errors.email && <span className="help-block">{errors.email}</span>}
-        </div>
+        <TextFieldGroup
+          error={errors.email}
+          label="email"
+          onChange={this.onChange}
+          value={this.state.email}
+          field="email"
+        />
 
-        <div className={cn("form-group", { 'has-error': errors.password })}>
-          <label className="control-label">Password</label>
-          <input
-            type="password"
-            name={this.state.password}
-            className="form-control"
-            onChange={this.onChange}
-          />
-          {errors.password && <span className="help-block">{errors.password}</span>}
-        </div>
+        <TextFieldGroup
+          error={errors.password}
+          label="Password"
+          onChange={this.onChange}
+          value={this.state.password}
+          field="password"
+        />
 
-        <div className={cn("form-group", { 'has-error': errors.passwordConfirmation })}>
-          <label className="control-label">Confirm Password</label>
-          <input
-            type="password"
-            name={this.state.passwordConfirmation}
-            className="form-control"
-            onChange={this.onChange}
-          />
-          {errors.passwordConfirmation && <span className="help-block">{errors.passwordConfirmation}</span>}
-        </div>
+        <TextFieldGroup
+          error={errors.passwordConfirmation}
+          label="Confirm Password"
+          onChange={this.onChange}
+          value={this.state.passwordConfirmation}
+          field="passwordConfirmation"
+        />
 
         <div className={cn("form-group", { 'has-error': errors.timezone })}>
           <label className="control-label">Timezone</label>
@@ -112,5 +117,5 @@ export default class SignupForm extends Component {
 }
 
 SignupForm.propTypes = {
-  userSignupRequest: React.propTypes.func.isRequired,
+  userSignupRequest: propTypes.func.isRequired,
 };
