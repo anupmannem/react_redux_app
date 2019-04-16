@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import map from 'lodash/map';
 import cn from 'classnames';
 import propTypes from 'prop-types';
-import timezones from '../../data/timezones';
+import { browserHistory } from 'react-router';
 
+import timezones from '../../data/timezones';
 import validateInput from '../../../server/shared/validations/signup';
 import TextFieldGroup from '../common/TextFieldGroup';
 
@@ -45,7 +46,9 @@ export default class SignupForm extends Component {
       this.setState({ errors: {}, isLoading: true });
       this.props.userSignupRequest(this.state)
         .then(
-          () => { },
+          () => {
+            browserHistory.push('/')
+          },
           ({ data }) => this.setState({ errors: data, isLoading: false }),
         );
     }
