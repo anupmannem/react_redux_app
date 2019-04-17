@@ -28,7 +28,20 @@ function validateInput(data, otherValidations) {
       isValid: isEmpty(errors),
     };
   })
-}
+};
+
+app.get('/:identifier', (req, res) => {
+  User.query({
+    select: [
+      'username',
+      'email'
+    ],
+    where: { email: req.params.identifier },
+    orWhere: { username: req.params.identifier }
+  }).fetch().then(user => {
+    res.json({ user });
+  })
+});
 
 router.post('/', (req, res) => {
   validateInput(req.body, commonValidations).then(({ errors, isValid }) => {
