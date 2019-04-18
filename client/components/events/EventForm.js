@@ -41,7 +41,7 @@ class EventForm extends Component {
           error={errors.title}
         />
 
-        <button type="submit" className="btn btn-primary">Create</button>
+        <button type="submit" disabled={this.isLoading} className="btn btn-primary">Create</button>
       </form>
     );
   }
